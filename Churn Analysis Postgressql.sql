@@ -12,7 +12,7 @@ from churn
 group by churned
 order by counts desc;
 
-/* Checking the churned rate */
+/* Checking the churned rate in the database*/
 select churned , round((counts / sum(counts) over()) * 100.0,2) as rate 
 from( select churned , count(churned) as counts
       from churn
