@@ -161,4 +161,90 @@ as(
    from t3
 )
 select hascrcard,round((count1::decimal /total_counts)*100,1) as rate0 , round((count0::decimal /total_counts)*100,1) as rate1
-from t4;
+from t4; 
+
+/*Getting the churn counts and rate by tenure*/
+with t1(churned,grouped_tenure)
+ as(
+   select churned ,
+    case 
+      when tenure  < 3 then '<2'
+      when tenure  >= 3 and tenure < 6 then '3-5'
+      when tenure  >= 6 and tenure < 9 then '6-8'    /*grouping the tenures*/
+      when tenure  > 8 then '>8'
+    end as grouped_tenure
+   from churn),
+    t2(churned,grouped_tenure,counts)
+ as(
+   select churned , grouped_tenure , count(grouped_tenure)
+   from t1 
+   group by churned , grouped_tenure)
+select 
+       a.grouped_tenure as tenure,
+       a.counts as churn_yes_counts,
+       b.counts as churned_no_counts,
+       round((a.counts::decimal/(a.counts + b.counts))*100,1) as rate1,
+       round((b.counts::decimal/(a.counts + b.counts))*100,1) as rate0
+from t2 a 
+join t2 b 
+ on a.grouped_tenure = b.grouped_tenure
+where a.churned =  '1'
+ and b.churned = '0'
+order by rate1 desc;
+
+/*Getting the churn counts and rate by age group*/
+with t1(churned,grouped_age)
+ as(
+   select churned ,
+    case 
+      when age  < 30 then '<30'
+      when age  >= 30 and age < 40 then '30-39'
+      when age  >= 40 and age < 50 then '40-49'    /*grouping the ages*/
+      when age  > 49 then '>50'
+    end as grouped_age
+   from churn),
+    t2(churned,grouped_age,counts)
+ as(
+   select churned , grouped_age , count(grouped_age)
+   from t1 
+   group by churned , grouped_age)
+select 
+       a.grouped_age as age,
+       a.counts as churn_yes_counts,
+       b.counts as churned_no_counts,
+       round((a.counts::decimal/(a.counts + b.counts))*100,1) as rate1,
+       round((b.counts::decimal/(a.counts + b.counts))*100,1) as rate0
+from t2 a 
+join t2 b 
+ on a.grouped_age = b.grouped_age
+where a.churned =  '1'
+ and b.churned = '0'
+order by rate1 desc;
+
+/*Getting the churn counts and rate by credit score*/
+with t1(churned,creditscore)
+ as(
+   select churned ,
+    case 
+      when creditscore  < 500 then '<500'
+      when creditscore  >= 500 and creditscore < 701 then '500-700'   /*grouping the ages*/    
+      when creditscore  > 700 then '>700'
+    end as creditscore
+   from churn),
+    t2(churned,creditscore,counts)
+ as(
+   select churned , creditscore , count(creditscore)
+   from t1 
+   group by churned , creditscore)
+select 
+       a.creditscore as creditscore,
+       a.counts as churn_yes_counts,
+       b.counts as churned_no_counts,
+       round((a.counts::decimal/(a.counts + b.counts))*100,1) as rate1,
+       round((b.counts::decimal/(a.counts + b.counts))*100,1) as rate0
+from t2 a 
+join t2 b 
+ on a.creditscore = b.creditscore
+where a.churned =  '1'
+ and b.churned = '0'
+order by rate1 desc;
