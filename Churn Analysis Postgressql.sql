@@ -313,3 +313,18 @@ join t2 b
 where a.churned =  '1'
  and b.churned = '0'
 order by rate1 desc;
+
+/*shorter churn gender rate*/
+with t1(gender,churned,counts)
+as(
+   select gender , churned,
+       count(churned)
+   from churn
+   group by gender , churned)
+select a.gender , a.churned , a.counts , b.churned ,b.counts
+from t1 a
+join t1 b
+    on a.gender = b.gender
+where a.churned = '0' and
+      b.churned = '1'
+;
