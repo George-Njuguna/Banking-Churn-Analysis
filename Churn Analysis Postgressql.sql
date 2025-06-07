@@ -27,33 +27,21 @@ order by counts desc;
 
 
 /* getting the churn rate by gender */
-with t1(gender,count1)
-as (
-    select gender , count(gender)
-    from churn 
-    where churned = '1'
-    group by gender
-	),
-t2(gender,count0)
+with t1(gender,churned,counts)
 as(
-   select gender , count(gender)
-   from churn 
-   where churned = '0'
-  group by gender
-  ),
-t3(gender,count1,count0)
-as(
-   select t1.gender , t1.count1 , t2.count0
-   from t1 
-   inner join t2 on t1.gender = t2.gender
-),
-t4(gender,count1,count0,total_counts)
-as(
-   select gender,count1,count0,(count1+count0) as total_counts
-   from t3
-)
-select gender,round((count1::decimal /total_counts)*100,1) as rate0 , round((count0::decimal /total_counts)*100,1) as rate1
-from t4;
+   select gender , churned,
+       count(churned)
+   from churn
+   group by gender , churned)
+select a.gender , 
+       round((a.counts::decimal / (a.counts+b.counts))*100,1) as rate0,
+       round((b.counts::decimal / (a.counts+b.counts))*100,1) as rate1
+from t1 a
+join t1 b
+    on a.gender = b.gender
+where a.churned = '0' and
+      b.churned = '1'
+;
 
 
 /* Getting number of bank clients in each geograpy */
@@ -63,33 +51,21 @@ group by geography
 order by counts desc;
 
 /* getting the churn rate by geography */
-with t1(geography,count1)
-as (
-    select geography , count(geography)
-    from churn 
-    where churned = '1'
-    group by geography
-	),
-t2(geography,count0)
+with t1(geography,churned,counts)
 as(
-   select geography , count(geography)
-   from churn 
-   where churned = '0'
-   group by geography
-  ),
-t3(geography,count1,count0)
-as(
-   select t1.geography , t1.count1 , t2.count0
-   from t1 
-   inner join t2 on t1.geography = t2.geography
-),
-t4(geography,count1,count0,total_counts)
-as(
-   select geography,count1,count0,(count1+count0) as total_counts
-   from t3
-)
-select geography,round((count1::decimal /total_counts)*100,1) as rate0 , round((count0::decimal /total_counts)*100,1) as rate1
-from t4;
+   select geography , churned,
+       count(churned)
+   from churn
+   group by geography , churned)
+select a.geography , 
+       round((a.counts::decimal / (a.counts+b.counts))*100,1) as rate0,
+       round((b.counts::decimal / (a.counts+b.counts))*100,1) as rate1
+from t1 a
+join t1 b
+    on a.geography = b.geography
+where a.churned = '0' and
+      b.churned = '1'
+;
 
 
 /* Getting number of bank clients by  membership */
@@ -106,34 +82,21 @@ group by gender , isactivemember;
 
 
 /* getting the churn rate by membership */
-with t1(isactivemember,count1)
-as (
-    select isactivemember , count(isactivemember)
-    from churn 
-    where churned = '1'
-    group by isactivemember
-	),
-t2(isactivemember,count0)
+with t1(isactivemember,churned,counts)
 as(
-   select isactivemember , count(isactivemember)
-   from churn 
-   where churned = '0'
-  group by isactivemember
-  ),
-t3(isactivemember,count1,count0)
-as(
-   select t1.isactivemember , t1.count1 , t2.count0
-   from t1 
-   inner join t2 on t1.isactivemember = t2.isactivemember
-),
-t4(isactivemember,count1,count0,total_counts)
-as(
-   select isactivemember,count1,count0,(count1+count0) as total_counts
-   from t3
-)
-select isactivemember,round((count1::decimal /total_counts)*100,1) as rate0 , round((count0::decimal /total_counts)*100,1) as rate1
-from t4;
-
+   select isactivemember , churned,
+       count(churned)
+   from churn
+   group by isactivemember , churned)
+select a.isactivemember , 
+       round((a.counts::decimal / (a.counts+b.counts))*100,1) as rate0,
+       round((b.counts::decimal / (a.counts+b.counts))*100,1) as rate1
+from t1 a
+join t1 b
+    on a.isactivemember = b.isactivemember
+where a.churned = '0' and
+      b.churned = '1'
+;
 
 /* Getting number of bank clients by credit card ownership */
 select hascrcard , count(hascrcard)  as counts
@@ -142,33 +105,21 @@ group by hascrcard
 order by counts desc;
 
 /* getting attrition rate by credit card ownership*/
-with t1(hascrcard,count1)
-as (
-    select hascrcard , count(hascrcard)
-    from churn 
-    where churned = '1'
-    group by hascrcard
-	),
-t2(hascrcard,count0)
+with t1(hascrcard,churned,counts)
 as(
-   select hascrcard , count(hascrcard)
-   from churn 
-   where churned = '0'
-  group by hascrcard
-  ),
-t3(hascrcard,count1,count0)
-as(
-   select t1.hascrcard , t1.count1 , t2.count0
-   from t1 
-   inner join t2 on t1.hascrcard = t2.hascrcard
-),
-t4(hascrcard,count1,count0,total_counts)
-as(
-   select hascrcard,count1,count0,(count1+count0) as total_counts
-   from t3
-)
-select hascrcard,round((count1::decimal /total_counts)*100,1) as rate0 , round((count0::decimal /total_counts)*100,1) as rate1
-from t4; 
+   select hascrcard , churned,
+       count(churned)
+   from churn
+   group by hascrcard , churned)
+select a.hascrcard , 
+       round((a.counts::decimal / (a.counts+b.counts))*100,1) as rate0,
+       round((b.counts::decimal / (a.counts+b.counts))*100,1) as rate1
+from t1 a
+join t1 b
+    on a.hascrcard = b.hascrcard
+where a.churned = '0' and
+      b.churned = '1'
+;
 
 /*Getting the churn counts and rate by tenure*/
 with t1(churned,grouped_tenure)
@@ -313,18 +264,3 @@ join t2 b
 where a.churned =  '1'
  and b.churned = '0'
 order by rate1 desc;
-
-/*shorter churn gender rate*/
-with t1(gender,churned,counts)
-as(
-   select gender , churned,
-       count(churned)
-   from churn
-   group by gender , churned)
-select a.gender , a.churned , a.counts , b.churned ,b.counts
-from t1 a
-join t1 b
-    on a.gender = b.gender
-where a.churned = '0' and
-      b.churned = '1'
-;
