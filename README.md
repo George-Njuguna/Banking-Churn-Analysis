@@ -24,16 +24,33 @@ The Data was aquired from Kaggle.com
 From our  Analysis, we can derive the following insights:
 
 1. There are more male customers than female customers, but the churn rate is higher among female customers.
+![alt text](image.png)
 
 2. France has the highest number of customers but the lowest churn rate.
+![alt text](image-1.png)
 
 3. Active customers outnumber non-active ones, yet non-active customers have the highest churn rate.
 
 4. Credit card ownership does not appear to influence customer churn.
+![alt text](image-2.png)
 
 5. Customers with less than one year of tenure at the bank exhibit the highest churn rate.
 
 6. Customers with more than two accounts tend to have higher churn rates than those with two or fewer accounts.
+![alt text](image-4.png)
+
+* **Feature Importance (Model Insight)**: According to the machine learning model, the top  features contributing to attrition are:
+
+  * **Number of Products**
+  * **Is Active Member**
+ 
+
+  Conversely, the **least important features** include:
+
+  * **Has Credit Card**
+  * **Credit Score**
+  ![alt text](image-3.png)
+
 
 ### **Recommendations**
 
