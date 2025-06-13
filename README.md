@@ -27,7 +27,7 @@ From our  Analysis, we can derive the following insights:
 ![alt text](image.png)
 
 2. France has the highest number of customers but the lowest churn rate.
-![alt text](image-1.png)
+![image](https://github.com/user-attachments/assets/c6c0190f-a02c-4018-99e2-a820d9cbaca9)
 
 3. Active customers outnumber non-active ones, yet non-active customers have the highest churn rate.
 
