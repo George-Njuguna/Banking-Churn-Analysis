@@ -12,6 +12,42 @@ from churn
 group by churned
 order by counts desc;
 
+/* Checking how many people have a balance of 0 group by gender*/
+select gender ,count(gender) 
+from churn 
+where balance = 0 
+group by gender;
+
+/* Checking how many people have a balance of 0 group by Geography*/
+select geography , count(geography)
+from churn
+where balance = 0
+group by geography;
+
+/* Checking for gender distributions of individuals who are not active members*/
+select gender , count(gender)
+from churn 
+where isactivemember = '0'
+group by gender;
+
+/* Checking for geography distributions of individuals who are not active members*/
+select geography , count(geography)
+from churn
+where isactivemember = '0'
+group by geography;
+
+/* Checking for gender distributions of individuals who are dont have credit cards */
+select gender , count(gender)
+from churn
+where hascrcard = '0'
+group by gender;
+
+/* Checking for geography distributions of individuals who are dont have credit cards */
+select geography , count(geography)
+from churn
+where hascrcard = '0'
+group by geography;
+
 /* Checking the churned rate in the database*/
 select churned , round((counts / sum(counts) over()) * 100.0,2) as rate 
 from( select churned , count(churned) as counts
